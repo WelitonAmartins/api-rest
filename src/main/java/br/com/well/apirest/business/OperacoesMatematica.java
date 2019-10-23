@@ -3,7 +3,7 @@ package br.com.well.apirest.business;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MatematicaSimples {
+public class OperacoesMatematica {
 	
 	public Double soma(Double primeiroValor, Double segundoValor) {
         return primeiroValor + segundoValor;
