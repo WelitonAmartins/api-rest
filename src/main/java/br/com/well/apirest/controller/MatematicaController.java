@@ -1,84 +1,69 @@
 package br.com.well.apirest.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.well.apirest.business.MatematicaSimples;
 import br.com.well.apirest.exception.OperacaoMatematicaException;
+import br.com.well.apirest.util.ConverterNumero;
 
 @RestController 
 public class MatematicaController {
 
+	@Autowired
+	private MatematicaSimples ms;
 	
-	@RequestMapping(value="/sum/{numberOne}/{numberTwo}", method=RequestMethod.GET)
-	public Double sum(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception{
-		if(!verificaSeENumerico(numberOne) || !verificaSeENumerico(numberTwo)) {
+	@RequestMapping(value="/sum/{primeiroValor}/{segundoValor}", method=RequestMethod.GET)
+	public Double sum(@PathVariable("primeiroValor") String primeiroValor, @PathVariable("segundoValor") String segundoValor) throws Exception{
+		if(!ConverterNumero.verificaSeENumerico(primeiroValor) || !ConverterNumero.verificaSeENumerico(segundoValor)) {
 			throw new OperacaoMatematicaException("Por favor setar um valor numerico");
 		}
-		
-		Double sum = convertDouble(numberOne) + convertDouble(numberTwo); 
-		return sum;
+		return ms.soma( ConverterNumero.convertDouble(primeiroValor), ConverterNumero.convertDouble(segundoValor));
 	}
 	
 	@RequestMapping(value="/sub/{primeiroValor}/{segundoValor}", method=RequestMethod.GET)
 	public Double subtracao(@PathVariable("primeiroValor") String primeiroValor, @PathVariable("segundoValor") String segundoValor) throws Exception {
-		if(!verificaSeENumerico(primeiroValor) || !verificaSeENumerico(segundoValor)) {
+		if(!ConverterNumero.verificaSeENumerico(primeiroValor) || !ConverterNumero.verificaSeENumerico(segundoValor)) {
 			throw new OperacaoMatematicaException("Por favor setar um valor numerico");
 		}
-		Double subtracao = convertDouble(primeiroValor) - convertDouble(segundoValor);
-		return subtracao;
+		return ms.subtracao(ConverterNumero.convertDouble(primeiroValor), ConverterNumero.convertDouble(segundoValor));
 	}
 	
 	@RequestMapping(value="/mult/{primeiroValor}/{segundoValor}", method=RequestMethod.GET)
 	public Double multiplicacao(@PathVariable("primeiroValor") String primeiroValor, @PathVariable("segundoValor") String segundoValor) throws Exception {
-		if(!verificaSeENumerico(primeiroValor) || !verificaSeENumerico(segundoValor)) {
+		if(!ConverterNumero.verificaSeENumerico(primeiroValor) || !ConverterNumero.verificaSeENumerico(segundoValor)) {
 			throw new OperacaoMatematicaException("Por favor setar um valor numerico");
 		}
-		Double subtracao = convertDouble(primeiroValor) * convertDouble(segundoValor);
-		return subtracao;
+		return ms.mutiplicacao(ConverterNumero.convertDouble(primeiroValor), ConverterNumero.convertDouble(segundoValor));
 	}
 	
 	@RequestMapping(value="/div/{primeiroValor}/{segundoValor}", method=RequestMethod.GET)
 	public Double divisao(@PathVariable("primeiroValor") String primeiroValor, @PathVariable("segundoValor") String segundoValor) throws Exception {
-		if(!verificaSeENumerico(primeiroValor) || !verificaSeENumerico(segundoValor)) {
+		if(!ConverterNumero.verificaSeENumerico(primeiroValor) || !ConverterNumero.verificaSeENumerico(segundoValor)) {
 			throw new OperacaoMatematicaException("Por favor setar um valor numerico");
 		}
-		Double subtracao = convertDouble(primeiroValor) / convertDouble(segundoValor);
-		return subtracao;
+		return ms.divisao(ConverterNumero.convertDouble(primeiroValor), ConverterNumero.convertDouble(segundoValor));
 	}
 	
 	@RequestMapping(value="/media/{primeiroValor}/{segundoValor}", method=RequestMethod.GET)
 	public Double media(@PathVariable("primeiroValor") String primeiroValor, @PathVariable("segundoValor") String segundoValor) throws Exception {
-		if(!verificaSeENumerico(primeiroValor) || !verificaSeENumerico(segundoValor)) {
+		if(!ConverterNumero.verificaSeENumerico(primeiroValor) || !ConverterNumero.verificaSeENumerico(segundoValor)) {
 			throw new OperacaoMatematicaException("Por favor setar um valor numerico");
 		}
-		Double subtracao = (convertDouble(primeiroValor) + convertDouble(segundoValor)) / 2 ;
-		return subtracao;
+		return ms.media(ConverterNumero.convertDouble(primeiroValor), ConverterNumero.convertDouble(segundoValor));
 	}
 	
 	@RequestMapping(value="/raiz/{valor}", method=RequestMethod.GET)
 	public Double raizQuadrada(@PathVariable("valor") String valor) throws Exception {
-		if(!verificaSeENumerico(valor)) {
+		if(!ConverterNumero.verificaSeENumerico(valor)) {
 			throw new OperacaoMatematicaException("Por favor setar um valor numerico");
 		}
-		Double subtracao = (Double) Math.sqrt(convertDouble(valor));
-		return subtracao;
+		return ms.raizQuadrada(ConverterNumero.convertDouble(valor));
 	}
 
-	private Double convertDouble(String strNumber) {
-		if(strNumber == null) return 0D;
-		String number = strNumber.replaceAll(",", ".");
-		if(verificaSeENumerico(number)) return Double.parseDouble(number);
-		return 0D;
-	}
-
-	private boolean verificaSeENumerico(String strNumber) {
-		if(strNumber == null) return false;
-								//subistitua todos as virgulas por ponto 
-		String number = strNumber.replaceAll(",", ".");
-	//regex qe verifica se é um numero
-		return number.matches("[-+]?[0-9]*\\.?[0-9]+");
-	}
+	
 	
 }
