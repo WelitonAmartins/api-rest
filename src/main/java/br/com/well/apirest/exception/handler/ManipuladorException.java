@@ -11,7 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import br.com.well.apirest.exception.ExceptionResponse;
-import br.com.well.apirest.exception.OperacaoMatematicaException;
+import br.com.well.apirest.exception.ResourceNotFundException;
 
 @ControllerAdvice
 @RestController
@@ -24,7 +24,7 @@ public class ManipuladorException extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@ExceptionHandler(OperacaoMatematicaException.class)
+	@ExceptionHandler(ResourceNotFundException.class)
 	public final ResponseEntity<ExceptionResponse> ManipuladorBadRequestExceptions(Exception ex, WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
 				request.getDescription(false));
