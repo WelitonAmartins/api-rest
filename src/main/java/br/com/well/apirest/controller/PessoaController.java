@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.well.apirest.entidade.Pessoa;
 import br.com.well.apirest.service.PessoaService;
+import br.com.well.apirest.vo.PessoaVO;
 
 @RestController
 @RequestMapping("/pessoa")
@@ -26,16 +27,14 @@ public class PessoaController {
 	@RequestMapping(value = "/{id}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Pessoa> buscarPorId(@PathVariable("id") Long id) {
-		return this.pessoaService.buscarPorId(id)
-				.map( pessoa -> ResponseEntity.ok(pessoa))
-				.orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<PessoaVO> buscarPorId(@PathVariable("id") Long id) {
+		return ResponseEntity.ok(this.pessoaService.buscarPorId(id));
 	}
 	
 	@RequestMapping(value = "/salvar",
 			method = RequestMethod.POST, 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Pessoa> salvarPessoa(@Valid @RequestBody Pessoa pessoa){
+	public ResponseEntity<PessoaVO> salvarPessoa(@Valid @RequestBody PessoaVO pessoa){
 		return  ResponseEntity.ok(this.pessoaService.criarPessoa(pessoa));
 	}
 	
@@ -49,7 +48,7 @@ public class PessoaController {
 	@RequestMapping(
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Pessoa>> buscarTodos() {
+	public ResponseEntity<List<PessoaVO>> buscarTodos() {
 		return ResponseEntity.ok(this.pessoaService.buscarTodos());
 	}
 

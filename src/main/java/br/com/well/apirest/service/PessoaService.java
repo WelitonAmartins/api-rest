@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.well.apirest.entidade.Pessoa;
+import br.com.well.apirest.mapeamento.PessoaMapeamento;
 import br.com.well.apirest.repository.PessoaRepository;
+import br.com.well.apirest.vo.PessoaVO;
 
 @Service
 public class PessoaService {
@@ -24,20 +26,23 @@ public class PessoaService {
 		return pessoa;
 	}
 	
-	public Pessoa criarPessoa(Pessoa entidade) {
-		return this.pessoaRepository.save(entidade);
+	public PessoaVO criarPessoa(PessoaVO entidade) {
+		Pessoa entity = PessoaMapeamento.parseObject(entidade, Pessoa.class);
+		PessoaVO vo = PessoaMapeamento.parseObject(this.pessoaRepository.save(entity), PessoaVO.class);
+		return vo;
 	}
 	
-	public Optional<Pessoa> buscarPorId(Long id) {
-		return this.pessoaRepository.findById(id);
+	public PessoaVO buscarPorId(Long id) {
+		Optional<Pessoa> entity = this.pessoaRepository.findById(id);
+		return PessoaMapeamento.parseObject(entity, PessoaVO.class);
 	}
 	
 	public void deletarPessoa(Long id) {
 		 this.pessoaRepository.deleteById(id);
 	}
 	
-	public List<Pessoa> buscarTodos() {
-		return this.pessoaRepository.findAll();
+	public List<PessoaVO> buscarTodos() {
+		return PessoaMapeamento.parseListObject(this.pessoaRepository.findAll(), PessoaVO.class);
 	
 	}
 
